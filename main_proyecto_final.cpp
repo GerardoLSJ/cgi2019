@@ -1,5 +1,5 @@
 /*---------------------------------------------------------*/
-/* ----------------   Práctica 11 --------------------------*/
+/* ----------------   Prï¿½ctica 11 --------------------------*/
 /*-----------------    2019-2   ---------------------------*/
 /*----------- Alumno: Karen Abril Robles Uribe -------------*/
 //#define STB_IMAGE_IMPLEMENTATION
@@ -77,7 +77,7 @@ float	posX = 0.0f,
 		movBrazoIzq = 0.0f;	// Variables para dibujar
 
 #define MAX_FRAMES 9
-int i_max_steps = 190;		// Cantidad de cuadros claves intermedios que está generando
+int i_max_steps = 190;		// Cantidad de cuadros claves intermedios que estï¿½ generando
 int i_curr_steps = 0;
 typedef struct _frame
 {
@@ -204,7 +204,7 @@ void LoadTextures()
 	t_caja_brillo = generateTextures("Texturas/caja_specular.png", 1);
 	t_cara_brillo = generateTextures("Texturas/SpecularMap.png", 0);
 	t_central = generateTextures("Texturas/Central.png", 1);
-	t_roca = generateTextures("Texturas/muro_roca.jpg", 1);
+	t_roca = generateTextures("Texturas/muro_roca.png", 1);
 
 	//t_groot_brillo = generateTextures("Texturas/SpecularMap_groot_2.png", 1);
 
@@ -387,7 +387,7 @@ void animate(void)
 }
 
 void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Model torso,
-	Model brazoDer, Model brazoIzq, Model cabeza, Model piso)
+	Model brazoDer, Model brazoIzq, Model cabeza, Model piso, Model pc)
 {
 	//Shader projectionShader("shaders/shader_light.vs", "shaders/shader_light.fs");
 	//Shader projectionShader("shaders/shader_texture_color.vs", "shaders/shader_texture_color.fs");
@@ -453,12 +453,12 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	piso.Draw(shader);
 
 	glBindVertexArray(VAO);
-	//Colocar código aquí
+	//Colocar cï¿½digo aquï¿½
 	lightingShader.setVec3("ambientColor", 0.0f, 0.0f, 0.0f);
 	lightingShader.setVec3("diffuseColor", 1.0f, 1.0f, 1.0f);
 	lightingShader.setVec3("specularColor", 1.0f, 0.0f, 0.0f);
 
-	//lightingShader.setInt("material_specular", t_groot_brillo);		// Aquí mandamos la textura de brillo (especular)
+	//lightingShader.setInt("material_specular", t_groot_brillo);		// Aquï¿½ mandamos la textura de brillo (especular)
 
 	//lightingShader.setInt("material_diffuse", t_unam);
 	//glDrawArrays(GL_QUADS, 0, 24);
@@ -467,7 +467,7 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	/* ----------------   PB Edificio Q -----------------------*/
 	/*---------------------------------------------------------*/
 
-	// ---------- Construcción Piso ---------- //
+	// ---------- Construcciï¿½n Piso ---------- //
 	// Centro
 	floor = tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(0.000f, 0.100f, 0.000f));
 	model = glm::scale(model, glm::vec3(12.90f, 0.20f, 11.36f));
@@ -492,7 +492,7 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
-	// ----- Construcción Muros Externos ----- //
+	// ----- Construcciï¿½n Muros Externos ----- //
 	// Pared No. 1
 	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(-6.550f, 1.700f, 14.985f));
 	model = glm::scale(model, glm::vec3(0.20f, 3.00f, 18.99f));
@@ -589,7 +589,7 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
-	// ----- Construcción Muros Internos ----- //
+	// ----- Construcciï¿½n Muros Internos ----- //
 
 	// *** Ala izquierda ***
 	// Muro 1
@@ -747,7 +747,7 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	lightingShader.setInt("material_diffuse", t_toalla);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	// ---------- Construcción Techo ---------- //
+	// ---------- Construcciï¿½n Techo ---------- //
 	// Centro
 	floor = tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(0.000f, 3.300f, 0.000f));
 	
@@ -799,7 +799,7 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	/* ----------------   P1 Edificio Q -----------------------*/
 	/*---------------------------------------------------------*/
 
-	// ----- Construcción Muros Externos ----- //
+	// ----- Construcciï¿½n Muros Externos ----- //
 	// Pared No. 1
 	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(-6.550f, 1.700f, 14.985f));
 	model = glm::scale(model, glm::vec3(0.20f, 3.00f, 18.99f));
@@ -896,7 +896,7 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
-	// ----- Construcción Muros Internos ----- //
+	// ----- Construcciï¿½n Muros Internos ----- //
 
 	// *** Ala izquierda ***
 	// Muro 1
@@ -1054,7 +1054,7 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	lightingShader.setInt("material_diffuse", t_toalla);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	// ---------- Construcción Techo ---------- //
+	// ---------- Construcciï¿½n Techo ---------- //
 	// Centro
 	floor = tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(0.000f, 3.300f, 0.000f));
 
@@ -1106,7 +1106,7 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	/* ----------------   P1 Edificio Q -----------------------*/
 	/*---------------------------------------------------------*/
 
-	// ----- Construcción Muros Externos ----- //
+	// ----- Construcciï¿½n Muros Externos ----- //
 	// Pared No. 1
 	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(-6.550f, 1.700f, 14.985f));
 	model = glm::scale(model, glm::vec3(0.20f, 3.00f, 18.99f));
@@ -1203,7 +1203,7 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
-	// ----- Construcción Muros Internos ----- //
+	// ----- Construcciï¿½n Muros Internos ----- //
 
 	// *** Ala izquierda ***
 	// Muro 1
@@ -1361,7 +1361,7 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	lightingShader.setInt("material_diffuse", t_toalla);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	// ---------- Construcción Piso ---------- //
+	// ---------- Construcciï¿½n Piso ---------- //
 	// Centro
 	floor = tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(0.000f, 0.100f, 0.000f));
 	model = glm::scale(model, glm::vec3(12.90f, 0.20f, 11.36f));
@@ -1384,6 +1384,12 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	lightingShader.setMat4("model", model);
 	lightingShader.setInt("material_diffuse", t_caja);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
+
+	
+	model = glm::translate( glm::mat4(1.0f) , glm::vec3(0.0f,0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
+	shader.setMat4("model", model);
+	pc.Draw(shader);	// PC
 
 
 	// ***********************************************************************************************
@@ -1457,8 +1463,9 @@ int main()
 	Model brazoIzq = ((char *)"Models/Personaje/brazoizq.obj");
 	Model cabeza = ((char *)"Models/Personaje/cabeza.obj");
 	Model pisoModel = ((char *)"Models/piso/piso.obj");
+	Model pc = ((char *)"Models/g.obj");
 
-	//Inicialización de KeyFrames
+	//Inicializaciï¿½n de KeyFrames
 
 	for (int i = 0; i < MAX_FRAMES; i++)
 	{
@@ -1495,7 +1502,7 @@ int main()
 		//display(modelShader, ourModel, llantasModel);
 		display(modelShader, botaDer, piernaDer, 
 				piernaIzq, torso, brazoDer, brazoIzq,
-				cabeza, pisoModel);
+				cabeza, pisoModel, pc);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
