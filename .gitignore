@@ -1,0 +1,10 @@
+/Debug
+/include
+/lib
+/shaders
+/SOIL2
+/assimp
+/.vscode
+*.dll
+*_prac*
+*.vcx*
