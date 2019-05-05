@@ -41,7 +41,7 @@ double	deltaTime = 0.0f,
 //Lighting
 glm::vec3 lightPosition(0.0f, 3.0f, 0.0f);
 //glm::vec3 lightDirection(1.0f, -1.0f, 0.0f);
-glm::vec3 lightDirection(0.0f, 0.0f, -1.0f);
+glm::vec3 lightDirection(0.0f, 0.0f, -3.0f);
 
 void myData(void);
 //void display(void);
@@ -248,6 +248,9 @@ void animate(void)
 
 void display(Shader shader, Model pc)
 {
+
+	
+	shader.use();
 	//Shader projectionShader("shaders/shader_light.vs", "shaders/shader_light.fs");
 	//Shader projectionShader("shaders/shader_texture_color.vs", "shaders/shader_texture_color.fs");
 	//Shader lightingShader("shaders/shader_texture_light_pos.vs", "shaders/shader_texture_light_pos.fs"); //Positional
@@ -284,7 +287,6 @@ void display(Shader shader, Model pc)
 	// material properties
 	lightingShader.setFloat("material_shininess", 32.0f);
 
-	shader.use();
 
 	// create transformations and Projection
 	glm::mat4 temp = glm::mat4(1.0f);
@@ -364,7 +366,7 @@ void display(Shader shader, Model pc)
 	tmp = model = glm::translate(glm::mat4(1.0f), glm::vec3(-6.550f, 1.700f, 14.985f));
 	model = glm::scale(model, glm::vec3(0.20f, 3.00f, 18.99f));
 	lightingShader.setMat4("model", model);
-	lightingShader.setInt("material_diffuse", t_roca);
+	lightingShader.setInt("material_diffuse", t_caja);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	// Pared No. 2
@@ -372,7 +374,7 @@ void display(Shader shader, Model pc)
 	floor = tmp = model = glm::translate(model, glm::vec3(-5.600f, 0.000f, 9.395f));
 	model = glm::scale(model, glm::vec3(11.00f, 3.00f, 0.20f));
 	lightingShader.setMat4("model", model);
-	lightingShader.setInt("material_diffuse", t_roca);
+	lightingShader.setInt("material_diffuse", t_caja);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	// Pared No. 3
@@ -380,7 +382,7 @@ void display(Shader shader, Model pc)
 	tmp = model = glm::translate(model, glm::vec3(-5.600f, 0.000f, -17.480f));
 	model = glm::scale(model, glm::vec3(0.20f, 3.00f, 35.16f));
 	lightingShader.setMat4("model", model);
-	lightingShader.setInt("material_diffuse", t_roca);
+	lightingShader.setInt("material_diffuse", t_caja);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	// Pared No. 4
@@ -388,7 +390,7 @@ void display(Shader shader, Model pc)
 	tmp = model = glm::translate(model, glm::vec3(5.600f, 0.000f, -17.480f));
 	model = glm::scale(model, glm::vec3(11.00f, 3.00f, 0.20f));
 	lightingShader.setMat4("model", model);
-	lightingShader.setInt("material_diffuse", t_roca);
+	lightingShader.setInt("material_diffuse", t_caja);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	
 	// Pared No. 5
@@ -396,7 +398,7 @@ void display(Shader shader, Model pc)
 	tmp = model = glm::translate(model, glm::vec3(5.600f, 0.000f, 2.505f));
 	model = glm::scale(model, glm::vec3(0.20f, 3.00f, 5.21f));
 	lightingShader.setMat4("model", model);
-	lightingShader.setInt("material_diffuse", t_roca);
+	lightingShader.setInt("material_diffuse", t_caja);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	// Pared No. 6
@@ -404,7 +406,7 @@ void display(Shader shader, Model pc)
 	tmp = model = glm::translate(model, glm::vec3(6.550f, 0.000f, 2.505f));
 	model = glm::scale(model, glm::vec3(12.9f, 3.00f, 0.20f));
 	lightingShader.setMat4("model", model);
-	lightingShader.setInt("material_diffuse", t_roca);
+	lightingShader.setInt("material_diffuse", t_caja);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	// Pared No. 7
@@ -412,7 +414,7 @@ void display(Shader shader, Model pc)
 	tmp = model = glm::translate(model, glm::vec3(6.550f, 0.000f, -12.355f));
 	model = glm::scale(model, glm::vec3(0.20f, 3.00f, 24.91f));
 	lightingShader.setMat4("model", model);
-	lightingShader.setInt("material_diffuse", t_roca);
+	lightingShader.setInt("material_diffuse", t_caja);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	// Pared No. 8
@@ -420,7 +422,7 @@ void display(Shader shader, Model pc)
 	tmp = model = glm::translate(model, glm::vec3(5.600f, 0.000f, -12.355f));
 	model = glm::scale(model, glm::vec3(11.00f, 3.00f, 0.20f));
 	lightingShader.setMat4("model", model);
-	lightingShader.setInt("material_diffuse", t_roca);
+	lightingShader.setInt("material_diffuse", t_caja);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	// Pared No. 9
@@ -428,7 +430,7 @@ void display(Shader shader, Model pc)
 	tmp = model = glm::translate(model, glm::vec3(5.600f, 0.000f, 22.750f));
 	model = glm::scale(model, glm::vec3(0.20f, 3.00f, 45.70f));
 	lightingShader.setMat4("model", model);
-	lightingShader.setInt("material_diffuse", t_roca);
+	lightingShader.setInt("material_diffuse", t_caja);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	// Pared No. 10
@@ -436,7 +438,7 @@ void display(Shader shader, Model pc)
 	tmp = model = glm::translate(model, glm::vec3(-5.600f, 0.000f, 22.750f));
 	model = glm::scale(model, glm::vec3(11.00f, 3.00f, 0.20f));
 	lightingShader.setMat4("model", model);
-	lightingShader.setInt("material_diffuse", t_roca);
+	lightingShader.setInt("material_diffuse", t_caja);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	// Pared No. 11
@@ -444,7 +446,7 @@ void display(Shader shader, Model pc)
 	tmp = model = glm::translate(model, glm::vec3(-5.600f, 0.000f, -4.815f));
 	model = glm::scale(model, glm::vec3(0.20f, 3.00f, 9.83f));
 	lightingShader.setMat4("model", model);
-	lightingShader.setInt("material_diffuse", t_roca);
+	lightingShader.setInt("material_diffuse", t_caja);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	// Pared No. 12
@@ -452,7 +454,7 @@ void display(Shader shader, Model pc)
 	tmp = model = glm::translate(model, glm::vec3(-6.550f, 0.000f, -4.815f));
 	model = glm::scale(model, glm::vec3(12.90f, 3.00f, 0.20f));
 	lightingShader.setMat4("model", model);
-	lightingShader.setInt("material_diffuse", t_roca);
+	lightingShader.setInt("material_diffuse", t_caja);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
@@ -663,11 +665,6 @@ void display(Shader shader, Model pc)
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
-
-
-
-
-
 	//Construccion de escaleras
 
 
@@ -706,7 +703,24 @@ void display(Shader shader, Model pc)
 
 	}
 
+
+
+
+
+
+
+
+
+
 	// ***********************************************************************************************
+
+	
+		// OBJS
+	model = glm::mat4(1.0f);
+
+	lightingShader.setMat4("model", model);
+	//lightingShader.setInt("material_diffuse", t_smile);
+	pc.Draw(lightingShader);	// PC
 
 	//Light
 	lampShader.use();
@@ -716,6 +730,9 @@ void display(Shader shader, Model pc)
 	model = glm::translate(model, lightPosition);
 	model = glm::scale(model, glm::vec3(0.25f));
 	lampShader.setMat4("model", model);
+
+
+
 
 	//glBindVertexArray(lightVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 36);	//Light
