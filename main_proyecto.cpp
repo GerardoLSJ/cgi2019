@@ -709,18 +709,7 @@ void display(Shader shader, Model pc)
 
 
 
-
-
-
 	// ***********************************************************************************************
-
-	
-		// OBJS
-	model = glm::mat4(1.0f);
-
-	lightingShader.setMat4("model", model);
-	//lightingShader.setInt("material_diffuse", t_smile);
-	pc.Draw(lightingShader);	// PC
 
 	//Light
 	lampShader.use();
@@ -730,6 +719,19 @@ void display(Shader shader, Model pc)
 	model = glm::translate(model, lightPosition);
 	model = glm::scale(model, glm::vec3(0.25f));
 	lampShader.setMat4("model", model);
+
+
+
+	// OBJS
+	shader.use();
+	lampShader.setMat4("projection", projection);
+	lampShader.setMat4("view", view);
+	model = glm::mat4(1.0f);
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.3f, 1.3f, 1.3f));
+	shader.setMat4("model", model);
+	//lightingShader.setInt("material_diffuse", t_smile);
+	pc.Draw(shader);	// PC
 
 
 
