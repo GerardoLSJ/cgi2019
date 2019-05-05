@@ -57,6 +57,13 @@ float	movX = 0.0f,
 		movZ = -5.0f,
 		rotX = 0.0f;
 
+// Animation
+float bee_mov = 0.0f,
+bee_x = 0.0f,
+bee_y = 0.0f,
+bee_z = 0.0f;
+int bee_flag = 1;
+
 //Texture
 unsigned int	t_smile,
 				t_toalla,
@@ -243,7 +250,30 @@ void myData()
 
 void animate(void)
 {
-
+	switch (bee_flag)
+	{
+		case 1:
+			bee_x += 0.02f;
+			bee_z -= 0.02f;
+			if(bee_x >= 20)
+				bee_flag = 2;
+			break;
+		case 2:
+			bee_y += 0.02f;
+			bee_x -= 0.02f;
+			if(bee_y >= 20)
+				bee_flag = 3;
+			break;
+		case 3:
+			bee_z += 0.02f;
+			bee_y -= 0.02f;
+			if(bee_z >= 20)
+				bee_flag = 1;
+			break;
+	
+		default:
+			break;
+	}
 }
 
 void display(Shader shader, Model pc)
@@ -726,12 +756,29 @@ void display(Shader shader, Model pc)
 	shader.use();
 	lampShader.setMat4("projection", projection);
 	lampShader.setMat4("view", view);
+
 	model = glm::mat4(1.0f);
-	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.3f, 1.3f, 1.3f));
+	model = glm::translate(model, glm::vec3(11.0f, 0.1f, -11.0f));
+	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.0116f, 0.0116f, 0.0116f));
 	shader.setMat4("model", model);
 	//lightingShader.setInt("material_diffuse", t_smile);
 	pc.Draw(shader);	// PC
+
+
+	// Abejas 
+
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(bee_x, bee_y, bee_z));
+	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.0116f, 0.0116f, 0.0116f));
+	shader.setMat4("model", model);
+	//lightingShader.setInt("material_diffuse", t_smile);
+	pc.Draw(shader);	// PC
+
+
+
+
 
 
 
@@ -788,7 +835,7 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	Shader modelShader("Shaders/modelLoading.vs", "Shaders/modelLoading.fs");
-	Model pc = ((char *)"Models/g.obj");
+	Model pc = ((char *)"Models/entorno1.obj");
 
     // render loop
     // While the windows is not closed
