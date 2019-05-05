@@ -204,7 +204,7 @@ void LoadTextures()
 	t_caja_brillo = generateTextures("Texturas/caja_specular.png", 1);
 	t_cara_brillo = generateTextures("Texturas/SpecularMap.png", 0);
 	t_central = generateTextures("Texturas/Central.png", 1);
-	t_roca = generateTextures("Texturas/muro_roca.png", 1);
+	t_roca = generateTextures("Texturas/caja.png", 1);
 
 	//t_groot_brillo = generateTextures("Texturas/SpecularMap_groot_2.png", 1);
 
@@ -1387,7 +1387,7 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 
 	
 	model = glm::translate( glm::mat4(1.0f) , glm::vec3(0.0f,0.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
+	//model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
 	shader.setMat4("model", model);
 	pc.Draw(shader);	// PC
 
