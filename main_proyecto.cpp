@@ -396,7 +396,7 @@ void animate(void)
 }
 
 void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Model torso,
-	Model brazoDer, Model brazoIzq, Model cabeza, Model piso, Model pc)
+	Model brazoDer, Model brazoIzq, Model cabeza, Model piso, Model pc, Model grass)
 {
 	//Shader projectionShader("shaders/shader_light.vs", "shaders/shader_light.fs");
 	//Shader projectionShader("shaders/shader_texture_color.vs", "shaders/shader_texture_color.fs");
@@ -1506,7 +1506,12 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 
 
 
-
+	// PASTO
+	//model = glm::mat4(1.0f);
+	//model = glm::translate(model, glm::vec3(0, 50, 60));
+	//model = glm::scale(model, glm::vec3(5.10f, 5.10f, 5.10f));
+	//shader.setMat4("model", model);
+	//grass.Draw(shader);	// PC
 	// Esto únicamente es para dibujar el cubo de luz
 
 	//Light
@@ -1642,6 +1647,7 @@ int main()
 	Model cabeza = ((char*)"Models/Personaje/cabeza.obj");
 	Model pisoModel = ((char*)"Models/piso/piso.obj");
 	Model pcModel = ((char*)"Models/g.obj");
+	Model grassModel = ((char*)"Models/grass2.obj");
 	
 	//Inicialización de KeyFrames
 
@@ -1680,7 +1686,7 @@ int main()
 		//display(modelShader, ourModel, llantasModel);
 		display(modelShader, botaDer, piernaDer,
 			piernaIzq, torso, brazoDer, brazoIzq,
-			cabeza, pisoModel, pcModel);
+			cabeza, pisoModel, pcModel,grassModel);
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
