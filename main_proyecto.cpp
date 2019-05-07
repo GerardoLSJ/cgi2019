@@ -73,9 +73,22 @@ bee_z = 0.0f,
 
 zz_x = 0.0f,
 zz_y = 0.0f,
-zz_z = 0.0f;
-int bee_flag = 1, 
+zz_z = 0.0f,
+
+cc_x = 0.0f,
+cc_y = 1.0f,
+cc_z = 0.0f,
+
+gg_x = 0.0f,
+gg_y = 1.0f,
+gg_z = 0.0f;
+
+
+int bee_flag = 1,
+cc_flag = 1,
+gg_flag = 1, 
 zz_flag = 1;
+
 
 //Keyframes
 float	posX = 0.0f,
@@ -348,6 +361,73 @@ void animate(void)
 {
 
 
+
+
+	// GROW  pasto 
+		switch (gg_flag)
+	{
+		case 1:
+			gg_x += 5.70f;
+			if(gg_x >= 50)
+				gg_flag = 2;
+			break;
+		case 2:
+			gg_x -= 5.70f;
+			if(gg_x <= 0)
+				gg_flag = 3;
+			break;
+		case 3:
+			gg_y += 5.70f;
+			gg_flag = 1;
+			if(gg_y >= 100){
+				gg_y = 1;
+			}
+			break;
+
+		default:
+			break;
+	}
+
+	// GROW END
+
+	// Circulo Remolino
+	//RESET remolino
+	if(cc_y > 300)
+		cc_y = 0;
+		
+	switch (cc_flag)
+	{
+		case 1:
+			cc_x += (5.75f + cc_y*0.1);
+			if(cc_x >= 10 + cc_y/2)
+				cc_flag = 2;
+			break;
+		case 2:
+			cc_z += (5.75f + cc_y*0.1);
+			if(cc_z >= 10 + cc_y/2)
+				cc_flag = 3;
+			break;
+		case 3:
+			cc_x -= (5.75f + cc_y*0.1);
+			if(cc_x <= 0)
+				cc_flag = 4;
+			break;
+		case 4:
+			cc_z -= (5.75f + cc_y*0.1);
+			if(cc_z <= 0){
+				cc_flag = 1;
+				//dezplaza en y
+				cc_y += 10;
+			}
+
+
+			break;
+
+		default:
+			break;
+	}
+
+	//end remolino Circulo
 
 	// ZIG ZAG
 			// ZIG ZAG
