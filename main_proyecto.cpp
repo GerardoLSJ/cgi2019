@@ -64,6 +64,19 @@ t_plafon,
 t_techo,
 t_muro;
 
+// Animation
+
+float bee_mov = 0.0f,
+bee_x = 0.0f,
+bee_y = 0.0f,
+bee_z = 0.0f,
+
+zz_x = 0.0f,
+zz_y = 0.0f,
+zz_z = 0.0f;
+int bee_flag = 1, 
+zz_flag = 1;
+
 //Keyframes
 float	posX = 0.0f,
 posY = 0.0f,
@@ -333,6 +346,58 @@ void myData()
 
 void animate(void)
 {
+
+
+
+	// ZIG ZAG
+			// ZIG ZAG
+	if(zz_flag){
+		zz_x += 0.5;
+		zz_y += 0.5;
+		zz_z += 0.5;
+	}else{
+		zz_y -= 0.5;
+		zz_z -= 0.5;
+	}
+
+	if(zz_y > 20){
+		zz_flag = 0;
+	}
+	if(zz_y < 0 ){
+		zz_flag = 1;
+	}
+	if(zz_x > 100 ){
+		zz_x = 0;
+	}
+	// ZIG ZAG END
+
+
+	// BEE START
+		switch (bee_flag)
+	{
+		case 1:
+			bee_x += 0.02f;
+			bee_z -= 0.02f;
+			if(bee_x >= 20)
+				bee_flag = 2;
+			break;
+		case 2:
+			bee_y += 0.02f;
+			bee_x -= 0.02f;
+			if(bee_y >= 20)
+				bee_flag = 3;
+			break;
+		case 3:
+			bee_z += 0.02f;
+			bee_y -= 0.02f;
+			if(bee_z >= 20)
+				bee_flag = 1;
+			break;
+
+		default:
+			break;
+	}
+	// BEE END 
 	if (play)
 	{
 		if (i_curr_steps >= i_max_steps) //end of animation between frames?
