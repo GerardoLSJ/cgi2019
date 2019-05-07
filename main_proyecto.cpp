@@ -58,6 +58,31 @@ movY = 0.0f,
 movZ = -5.0f,
 rotX = 0.0f;
 
+
+
+float bee_mov = 0.0f,
+bee_x = 0.0f,
+bee_y = 0.0f,
+bee_z = 0.0f,
+
+zz_x = 0.0f,
+zz_y = 0.0f,
+zz_z = 0.0f,
+
+cc_x = 0.0f,
+cc_y = 1.0f,
+cc_z = 0.0f,
+
+gg_x = 0.0f,
+gg_y = 1.0f,
+gg_z = 0.0f;
+
+
+int bee_flag = 1,
+cc_flag = 1,
+gg_flag = 1,
+zz_flag = 1;
+
 //Texture
 unsigned int	t_azulejo,
 				t_plafon,
@@ -66,6 +91,8 @@ unsigned int	t_azulejo,
 				t_escalera,
 				t_q,
 				t_entrada,
+				t_ghost,
+				t_hoja,
 				t_panda;
 
 //Keyframes
@@ -209,6 +236,8 @@ void LoadTextures()
 	t_escalera = generateTextures("Texturas/granite.jpg", 0);
 	t_q = generateTextures("Texturas/q.jpeg", 0);
 	t_entrada = generateTextures("Texturas/entrada.jpeg", 0);
+	t_ghost = generateTextures("Texturas/ghost.png", 1);
+	t_hoja = generateTextures("Texturas/hojas.png", 1);
 
 	t_panda = generateTextures("Texturas/Panda.png", 0);
 
@@ -239,9 +268,15 @@ void LoadTextures()
 	glBindTexture(GL_TEXTURE_2D, t_entrada);
 
 
+	glActiveTexture(GL_TEXTURE8);
+	glBindTexture(GL_TEXTURE_2D, t_ghost);
+
+	glActiveTexture(GL_TEXTURE9);
+	glBindTexture(GL_TEXTURE_2D, t_hoja);
+
 	//Textura auxiliar no quitar porque no carga la ultima
 
-	glActiveTexture(GL_TEXTURE8);
+	glActiveTexture(GL_TEXTURE10);
 	glBindTexture(GL_TEXTURE_2D, t_panda);
 }
 
@@ -358,6 +393,127 @@ void myData()
 
 void animate(void)
 {
+
+
+
+	// GROW  pasto 
+	switch (gg_flag)
+	{
+	case 1:
+		gg_x += 0.02f;
+		if (gg_x >= 0.1)
+			gg_flag = 2;
+		break;
+	case 2:
+		gg_x -= 0.02f;
+		if (gg_x <= 0)
+			gg_flag = 3;
+		break;
+	case 3:
+		gg_y += 0.10f;
+		gg_flag = 1;
+		if (gg_y >= 2) {
+			gg_y = 1;
+		}
+		break;
+
+	default:
+		break;
+	}
+
+	// Circulo Remolino
+	//RESET remolino
+	if (cc_y > 300)
+		cc_y = 0;
+
+	switch (cc_flag)
+	{
+	case 1:
+		cc_x += (5.75f + cc_y * 0.1);
+		if (cc_x >= 10 + cc_y / 2)
+			cc_flag = 2;
+		break;
+	case 2:
+		cc_z += (5.75f + cc_y * 0.1);
+		if (cc_z >= 10 + cc_y / 2)
+			cc_flag = 3;
+		break;
+	case 3:
+		cc_x -= (5.75f + cc_y * 0.1);
+		if (cc_x <= 0)
+			cc_flag = 4;
+		break;
+	case 4:
+		cc_z -= (5.75f + cc_y * 0.1);
+		if (cc_z <= 0) {
+			cc_flag = 1;
+			//dezplaza en y
+			cc_y += 10;
+		}
+
+
+		break;
+
+	default:
+		break;
+	}
+
+	//end remolino Circulo
+
+	// ZIG ZAG fantasma
+	if (zz_flag) {
+		zz_x += 0.035;
+		zz_y += 0.02;
+		zz_z += 0.02;
+	}
+	else {
+		zz_x += 0.035;
+		zz_y -= 0.02;
+		zz_z -= 0.02;
+	}
+
+	if (zz_y > 2.2) {
+		zz_flag = 0;
+	}
+	if (zz_y < 1) {
+		zz_flag = 1;
+	}
+	if (zz_x > 20) {
+		zz_x = 0;
+	}
+	// ZIG ZAG END
+
+
+	// BEE START
+	switch (bee_flag)
+	{
+	case 1:
+		bee_x += 0.02f;
+		bee_z -= 0.02f;
+		if (bee_x >= 20)
+			bee_flag = 2;
+		break;
+	case 2:
+		bee_y += 0.02f;
+		bee_x -= 0.02f;
+		if (bee_y >= 20)
+			bee_flag = 3;
+		break;
+	case 3:
+		bee_z += 0.02f;
+		bee_y -= 0.02f;
+		if (bee_z >= 20)
+			bee_flag = 1;
+		break;
+
+	default:
+		break;
+	}
+	// BEE END 
+
+
+
+
 	if (play)
 	{
 		if (i_curr_steps >= i_max_steps) //end of animation between frames?
@@ -1503,6 +1659,37 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
+	//Pizarron
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(14.5f, 3.7f, -12.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 1.5f, 0.05f));
+	lightingShader.setMat4("model", model);
+
+	lightingShader.setInt("material_diffuse", t_entrada);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+
+
+
+	//animacion fantasma
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(-10.0f + zz_x, 0.0f + zz_y, 0.7f + zz_z));
+	model = glm::scale(model, glm::vec3(1.0f, 2.0f, 0.05f));
+	lightingShader.setMat4("model", model);
+	lightingShader.setInt("material_diffuse", t_ghost);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+
+	// hojas animacion remolino
+	model = glm::mat4(1.0f);
+
+	model = glm::translate(model, glm::vec3(0.0f + cc_x * 0.01, 1.0f + cc_y * 0.01, 10.0f + cc_z * 0.01));
+	model = glm::scale(model, glm::vec3(2.0f, 1.0f, 0.18f));
+	lightingShader.setMat4("model", model);
+	lightingShader.setInt("material_diffuse", t_hoja);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
 
@@ -1527,6 +1714,15 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	glDrawArrays(GL_TRIANGLES, 0, 36);	//Light
 
 	glBindVertexArray(0);
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1589,6 +1785,36 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	tmp = glm::translate(tmp, glm::vec3(105.0f, 0.0f, 0.0f));
 	shader.setMat4("model", tmp);
 	pc.Draw(shader);	// PC
+
+
+	// PASTO
+
+	// Situamos en la posición inicial
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(6.5f, 0.0f, 16.5f));
+
+	// Colocación de 
+	model = glm::translate(model, glm::vec3(0.0f + gg_x, -1.0f - gg_y * 0.1, 0.0f));
+	model = glm::scale(model, glm::vec3(0.08f, gg_y*0.1 - 0.03f + 0.08f, 0.08f));
+	shader.setMat4("model", model);
+	grass.Draw(shader);	// grass
+
+	model = glm::translate(model, glm::vec3(3.0f + gg_x, 0.0f, 0.0f));
+	shader.setMat4("model", model);
+	grass.Draw(shader);	// grass
+
+
+	for (int i = 0; i <= 12; i++) {
+		model = glm::translate(model, glm::vec3(10.f, 0.0f, 0.0f));
+		shader.setMat4("model", model);
+		grass.Draw(shader);	// grass
+	}
+
+
+
+
+
+
+
 
 }
 
