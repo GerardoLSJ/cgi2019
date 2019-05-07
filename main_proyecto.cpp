@@ -60,35 +60,13 @@ rotX = 0.0f;
 
 //Texture
 unsigned int	t_azulejo,
-t_plafon,
-t_techo,
-t_muro;
-
-// Animation
-
-float bee_mov = 0.0f,
-bee_x = 0.0f,
-bee_y = 0.0f,
-bee_z = 0.0f,
-
-zz_x = 0.0f,
-zz_y = 0.0f,
-zz_z = 0.0f,
-
-cc_x = 0.0f,
-cc_y = 1.0f,
-cc_z = 0.0f,
-
-gg_x = 0.0f,
-gg_y = 1.0f,
-gg_z = 0.0f;
-
-
-int bee_flag = 1,
-cc_flag = 1,
-gg_flag = 1, 
-zz_flag = 1;
-
+				t_plafon,
+				t_techo,
+				t_muro, 
+				t_escalera,
+				t_q,
+				t_entrada,
+				t_panda;
 
 //Keyframes
 float	posX = 0.0f,
@@ -224,10 +202,15 @@ void getResolution()
 
 void LoadTextures()
 {
-	t_azulejo = generateTextures("Texturas/azulejo.png", 1);
-	t_muro = generateTextures("Texturas/pb.png", 1);
+	t_azulejo = generateTextures("Texturas/ladrillos.jpg", 0);
+	t_muro = generateTextures("Texturas/concreto.jpg", 0);
 	t_plafon = generateTextures("Texturas/plafon.png", 1);
 	t_techo = generateTextures("Texturas/techo.png", 1);
+	t_escalera = generateTextures("Texturas/granite.jpg", 0);
+	t_q = generateTextures("Texturas/q.jpeg", 0);
+	t_entrada = generateTextures("Texturas/entrada.jpeg", 0);
+
+	t_panda = generateTextures("Texturas/Panda.png", 0);
 
 	// bind textures on corresponding texture units
 	glActiveTexture(GL_TEXTURE0);
@@ -244,6 +227,22 @@ void LoadTextures()
 
 	glActiveTexture(GL_TEXTURE4);
 	glBindTexture(GL_TEXTURE_2D, t_techo);
+
+	glActiveTexture(GL_TEXTURE5);
+	glBindTexture(GL_TEXTURE_2D, t_escalera);
+
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, t_q);
+
+
+	glActiveTexture(GL_TEXTURE7);
+	glBindTexture(GL_TEXTURE_2D, t_entrada);
+
+
+	//Textura auxiliar no quitar porque no carga la ultima
+
+	glActiveTexture(GL_TEXTURE8);
+	glBindTexture(GL_TEXTURE_2D, t_panda);
 }
 
 void myData()
@@ -359,125 +358,6 @@ void myData()
 
 void animate(void)
 {
-
-
-
-
-	// GROW  pasto 
-		switch (gg_flag)
-	{
-		case 1:
-			gg_x += 5.70f;
-			if(gg_x >= 50)
-				gg_flag = 2;
-			break;
-		case 2:
-			gg_x -= 5.70f;
-			if(gg_x <= 0)
-				gg_flag = 3;
-			break;
-		case 3:
-			gg_y += 5.70f;
-			gg_flag = 1;
-			if(gg_y >= 100){
-				gg_y = 1;
-			}
-			break;
-
-		default:
-			break;
-	}
-
-	// GROW END
-
-	// Circulo Remolino
-	//RESET remolino
-	if(cc_y > 300)
-		cc_y = 0;
-		
-	switch (cc_flag)
-	{
-		case 1:
-			cc_x += (5.75f + cc_y*0.1);
-			if(cc_x >= 10 + cc_y/2)
-				cc_flag = 2;
-			break;
-		case 2:
-			cc_z += (5.75f + cc_y*0.1);
-			if(cc_z >= 10 + cc_y/2)
-				cc_flag = 3;
-			break;
-		case 3:
-			cc_x -= (5.75f + cc_y*0.1);
-			if(cc_x <= 0)
-				cc_flag = 4;
-			break;
-		case 4:
-			cc_z -= (5.75f + cc_y*0.1);
-			if(cc_z <= 0){
-				cc_flag = 1;
-				//dezplaza en y
-				cc_y += 10;
-			}
-
-
-			break;
-
-		default:
-			break;
-	}
-
-	//end remolino Circulo
-
-	// ZIG ZAG
-			// ZIG ZAG
-	if(zz_flag){
-		zz_x += 0.5;
-		zz_y += 0.5;
-		zz_z += 0.5;
-	}else{
-		zz_y -= 0.5;
-		zz_z -= 0.5;
-	}
-
-	if(zz_y > 20){
-		zz_flag = 0;
-	}
-	if(zz_y < 0 ){
-		zz_flag = 1;
-	}
-	if(zz_x > 100 ){
-		zz_x = 0;
-	}
-	// ZIG ZAG END
-
-
-	// BEE START
-		switch (bee_flag)
-	{
-		case 1:
-			bee_x += 0.02f;
-			bee_z -= 0.02f;
-			if(bee_x >= 20)
-				bee_flag = 2;
-			break;
-		case 2:
-			bee_y += 0.02f;
-			bee_x -= 0.02f;
-			if(bee_y >= 20)
-				bee_flag = 3;
-			break;
-		case 3:
-			bee_z += 0.02f;
-			bee_y -= 0.02f;
-			if(bee_z >= 20)
-				bee_flag = 1;
-			break;
-
-		default:
-			break;
-	}
-	// BEE END 
 	if (play)
 	{
 		if (i_curr_steps >= i_max_steps) //end of animation between frames?
@@ -1532,12 +1412,16 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	glm::mat4 tmpEscalera2 = glm::mat4(1.0f);		// initialize Matrix, Use this matrix for individual models
 	tmpEscalera = tmpEscalera2 = glm::translate(tmpEscalera, glm::vec3(1.60f, 0.18f, -1.0f));
 	tmpEscalera = glm::scale(tmpEscalera, glm::vec3(2.6f, 0.18f, 0.28f));  // dimensiones de la escalera
-	lightingShader.setMat4("model", tmpEscalera);
-	lightingShader.setInt("material_diffuse", t_azulejo);
+	model = tmpEscalera;
+	lightingShader.setMat4("model", model);
+	lightingShader.setInt("material_diffuse", t_escalera);
 	for (int i = 0; i <= 14; i++) {
 		tmpEscalera = glm::translate(tmpEscalera, glm::vec3(0.0f, 0.5f, -0.5f));
-		lightingShader.setMat4("model", tmpEscalera);
-		lightingShader.setInt("material_diffuse", t_azulejo);
+		model = tmpEscalera;
+
+		lightingShader.setMat4("model", model);
+
+		lightingShader.setInt("material_diffuse", t_escalera);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	}
@@ -1545,7 +1429,7 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	tmpEscalera = glm::translate(tmpEscalera, glm::vec3(-0.62f, 0.5f, -4.60f));
 	tmpEscalera = glm::scale(tmpEscalera, glm::vec3(2.24f, 1.0f, 8.2f));  // dimensiones de la escalera
 	lightingShader.setMat4("model", tmpEscalera);
-	lightingShader.setInt("material_diffuse", t_azulejo);
+	lightingShader.setInt("material_diffuse", t_escalera);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	// Escaleras segunda parte
@@ -1557,7 +1441,7 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	for (int i = 0; i <= 17; i++) {
 		tmpEscalera = glm::translate(tmpEscalera, glm::vec3(0.0f, 0.5f, 0.5f));
 		lightingShader.setMat4("model", tmpEscalera);
-		lightingShader.setInt("material_diffuse", t_azulejo);
+		lightingShader.setInt("material_diffuse", t_escalera);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	}
@@ -1573,11 +1457,11 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	tmpEscalera = tmpEscalera2 = glm::translate(tmpEscalera, glm::vec3(1.60f, 3.36f, -0.45f));
 	tmpEscalera = glm::scale(tmpEscalera, glm::vec3(2.6f, 0.18f, 0.28f));  // dimensiones de la escalera
 	lightingShader.setMat4("model", tmpEscalera);
-	lightingShader.setInt("material_diffuse", t_azulejo);
+	lightingShader.setInt("material_diffuse", t_escalera);
 	for (int i = 0; i <= 14; i++) {
 		tmpEscalera = glm::translate(tmpEscalera, glm::vec3(0.0f, 0.5f, -0.5f));
 		lightingShader.setMat4("model", tmpEscalera);
-		lightingShader.setInt("material_diffuse", t_azulejo);
+		lightingShader.setInt("material_diffuse", t_escalera);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	}
@@ -1585,7 +1469,7 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	tmpEscalera = glm::translate(tmpEscalera, glm::vec3(-0.62f, 0.5f, -4.60f));
 	tmpEscalera = glm::scale(tmpEscalera, glm::vec3(2.24f, 1.0f, 8.2f));  // dimensiones de la escalera
 	lightingShader.setMat4("model", tmpEscalera);
-	lightingShader.setInt("material_diffuse", t_azulejo);
+	lightingShader.setInt("material_diffuse", t_escalera);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	// Escaleras segunda parte
@@ -1597,12 +1481,26 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	for (int i = 0; i <= 13; i++) {
 		tmpEscalera = glm::translate(tmpEscalera, glm::vec3(0.0f, 0.55f, 0.5f));
 		lightingShader.setMat4("model", tmpEscalera);
-		lightingShader.setInt("material_diffuse", t_azulejo);
+		lightingShader.setInt("material_diffuse", t_escalera);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	}
 
+	//Letrero del edificio
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(7.8f, 3.5f, 15.3f));
+	model = glm::scale(model, glm::vec3(1.4f, 1.4f, 0.05f));
+	lightingShader.setMat4("model", model);
+	lightingShader.setInt("material_diffuse", t_q);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 
+	//entrada principal
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.0f, 2.0f, 5.7f));
+	model = glm::scale(model, glm::vec3(3.0f, 4.0f, 0.05f));
+	lightingShader.setMat4("model", model);
+	lightingShader.setInt("material_diffuse", t_entrada);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
 
