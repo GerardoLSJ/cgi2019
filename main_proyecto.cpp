@@ -10,14 +10,28 @@
 
 #include "camera.h"
 #include "Model.h"
+#include <stdio.h>
+
+
+
 
 // Other Libs
 #include "SOIL2/SOIL2.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
 
 void resize(GLFWwindow* window, int width, int height);
 void my_input(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+
+
+
+//Variables para archivo de texto de keyframes
+ofstream myfile;
 
 // settings
 // Window size
@@ -93,6 +107,8 @@ unsigned int	t_azulejo,
 				t_entrada,
 				t_ghost,
 				t_hoja,
+
+				t_pizarr,
 				t_panda;
 
 //Keyframes
@@ -132,6 +148,21 @@ int FrameIndex = 0;			//introducir datos
 bool play = false;
 int playIndex = 0;
 
+
+int writeFile()
+{
+
+	for (int i = 0; i <= FrameIndex; i++) {
+		myfile << KeyFrame[i].posX << "," << KeyFrame[i].posY << "," << KeyFrame[i].posZ << "\n";
+	}
+
+	myfile.close();
+	return 0;
+}
+
+
+
+
 void reset_camera(void) {
 	x_camera = 0.0f;
 	y_camera = 0.0f;
@@ -153,6 +184,7 @@ void saveFrame(void)
 	KeyFrame[FrameIndex].movBrazoIzq = movBrazoIzq;
 
 	FrameIndex++;
+
 }
 
 void resetElements(void)
@@ -170,6 +202,14 @@ void resetElements(void)
 
 void interpolation(void)
 {
+
+	string line;
+	ifstream myfile ("example.txt");
+
+	while ( getline(myfile, line)) {
+		cout << line << " ___ ";
+	}
+	
 	KeyFrame[playIndex].incX = (KeyFrame[playIndex + 1].posX - KeyFrame[playIndex].posX) / i_max_steps;
 	KeyFrame[playIndex].incY = (KeyFrame[playIndex + 1].posY - KeyFrame[playIndex].posY) / i_max_steps;
 	KeyFrame[playIndex].incZ = (KeyFrame[playIndex + 1].posZ - KeyFrame[playIndex].posZ) / i_max_steps;
@@ -238,6 +278,7 @@ void LoadTextures()
 	t_entrada = generateTextures("Texturas/entrada.jpeg", 0);
 	t_ghost = generateTextures("Texturas/ghost.png", 1);
 	t_hoja = generateTextures("Texturas/hojas.png", 1);
+	t_pizarr = generateTextures("Texturas/pizarr.png", 1);
 
 	t_panda = generateTextures("Texturas/Panda.png", 0);
 
@@ -274,9 +315,12 @@ void LoadTextures()
 	glActiveTexture(GL_TEXTURE9);
 	glBindTexture(GL_TEXTURE_2D, t_hoja);
 
+	glActiveTexture(GL_TEXTURE10);
+	glBindTexture(GL_TEXTURE_2D, t_pizarr);
+
 	//Textura auxiliar no quitar porque no carga la ultima
 
-	glActiveTexture(GL_TEXTURE10);
+	glActiveTexture(GL_TEXTURE11);
 	glBindTexture(GL_TEXTURE_2D, t_panda);
 }
 
@@ -488,21 +532,23 @@ void animate(void)
 	switch (bee_flag)
 	{
 	case 1:
-		bee_x += 0.02f;
-		bee_z -= 0.02f;
+		bee_x += 0.2f;
 		if (bee_x >= 20)
 			bee_flag = 2;
 		break;
 	case 2:
-		bee_y += 0.02f;
-		bee_x -= 0.02f;
-		if (bee_y >= 20)
+		bee_z += 0.2f;
+		if (bee_z >= 20)
 			bee_flag = 3;
 		break;
 	case 3:
-		bee_z += 0.02f;
-		bee_y -= 0.02f;
-		if (bee_z >= 20)
+		bee_x -= 0.2f;
+		if (bee_x <= 0)
+			bee_flag = 4;
+		break;
+	case 4:
+		bee_z -= 0.2f;
+		if (bee_z <= 0)
 			bee_flag = 1;
 		break;
 
@@ -1661,11 +1707,11 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 
 	//Pizarron
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(14.5f, 3.7f, -12.0f));
-	model = glm::scale(model, glm::vec3(2.0f, 1.5f, 0.05f));
+	model = glm::translate(model, glm::vec3(14.0f, 4.8f, -12.0f));
+	model = glm::scale(model, glm::vec3(2.5f, 1.5f, 0.05f));
 	lightingShader.setMat4("model", model);
 
-	lightingShader.setInt("material_diffuse", t_entrada);
+	lightingShader.setInt("material_diffuse", t_pizarr);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
@@ -1692,14 +1738,14 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
+	//clouds 
 
-	// PASTO
-	//model = glm::mat4(1.0f);
-	//model = glm::translate(model, glm::vec3(0, 50, 60));
-	//model = glm::scale(model, glm::vec3(5.10f, 5.10f, 5.10f));
-	//shader.setMat4("model", model);
-	//grass.Draw(shader);	// PC
-	// Esto únicamente es para dibujar el cubo de luz
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.0f + bee_x , 10.0f + bee_y, 10.0f + bee_z ));
+	model = glm::scale(model, glm::vec3(4.0f, 1.0f, 0.18f));
+	lightingShader.setMat4("model", model);
+	lightingShader.setInt("material_diffuse", t_hoja);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	//Light
 	lampShader.use();
@@ -1788,7 +1834,6 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 
 
 	// PASTO
-
 	// Situamos en la posición inicial
 	model = glm::translate(glm::mat4(1.0f), glm::vec3(6.5f, 0.0f, 16.5f));
 
@@ -1811,8 +1856,13 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 
 
 
+	//aNIMACION CON KEYFRAMES
+	model = glm::mat4(1.0f);
 
-
+	model = glm::translate(model, glm::vec3(posX, posY, posZ));
+	model = glm::scale(model, glm::vec3(posX, 1.88f, 1.88f));
+	shader.setMat4("model", model);
+	grass.Draw(shader);	// grass
 
 
 
@@ -1820,6 +1870,10 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 
 int main()
 {
+
+	myfile.open("example.txt");
+
+
 	// glfw: initialize and configure
 	// ------------------------------
 	glfwInit();
@@ -1948,7 +2002,7 @@ void my_input(GLFWwindow * window, int key, int scancode, int action, int mode)
 	//if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
 	//	reset_camera(0.0f, 25.0f, 80.0f);
 
-	/*
+
 	//To Configure Model
 	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
 		posZ++;
@@ -1958,30 +2012,12 @@ void my_input(GLFWwindow * window, int key, int scancode, int action, int mode)
 		posX--;
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
 		posX++;
+
 	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
 		posY--;
 	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
 		posY++;
-	// Cuerpo
-	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-		rotRodIzq--;
-	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
-		rotRodIzq++;
-	if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS)
-		giroMonito--;
-	if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
-		giroMonito++;
-		// Para mover brazo izquierdo
-	if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
-		movBrazoIzq -=2.0f;
-	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
-		movBrazoIzq +=2.0f;
-		// Para mover brazo derecho
-	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
-		movBrazoDer -= 2.0f;
-	if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
-		movBrazoDer += 2.0f;
-	*/
+
 
 
 	//To play KeyFrame animation 
@@ -1996,6 +2032,9 @@ void my_input(GLFWwindow * window, int key, int scancode, int action, int mode)
 			play = true;
 			playIndex = 0;
 			i_curr_steps = 0;
+
+			//Guardar la animacion en el archivo
+			writeFile();
 		}
 		else
 		{
