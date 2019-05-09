@@ -1,7 +1,11 @@
 /*---------------------------------------------------------*/
 /* ----------------   Práctica 11 --------------------------*/
 /*-----------------    2019-2   ---------------------------*/
-/*----------- Alumno: Karen Abril Robles Uribe -------------*/
+/*----------- Alumnos: 
+					Lopez Santibanez Jimenez Luis Gerardo
+					Silva Garcia Carlos Sebastian
+					Robles Uribe Karen Abril 
+-------------*/
 /*----------- Proyecto final -------------*/
 //#define STB_IMAGE_IMPLEMENTATION
 #include <glew.h>
@@ -107,8 +111,8 @@ unsigned int	t_azulejo,
 				t_entrada,
 				t_ghost,
 				t_hoja,
-
 				t_pizarr,
+				t_cloud,
 				t_panda;
 
 //Keyframes
@@ -279,6 +283,7 @@ void LoadTextures()
 	t_ghost = generateTextures("Texturas/ghost.png", 1);
 	t_hoja = generateTextures("Texturas/hojas.png", 1);
 	t_pizarr = generateTextures("Texturas/pizarr.png", 1);
+	t_cloud = generateTextures("Texturas/cloud_b.png", 1);
 
 	t_panda = generateTextures("Texturas/Panda.png", 0);
 
@@ -318,9 +323,12 @@ void LoadTextures()
 	glActiveTexture(GL_TEXTURE10);
 	glBindTexture(GL_TEXTURE_2D, t_pizarr);
 
+	glActiveTexture(GL_TEXTURE11);
+	glBindTexture(GL_TEXTURE_2D, t_cloud);
+
 	//Textura auxiliar no quitar porque no carga la ultima
 
-	glActiveTexture(GL_TEXTURE11);
+	glActiveTexture(GL_TEXTURE12);
 	glBindTexture(GL_TEXTURE_2D, t_panda);
 }
 
@@ -532,8 +540,8 @@ void animate(void)
 	switch (bee_flag)
 	{
 	case 1:
-		bee_x += 0.2f;
-		if (bee_x >= 20)
+		bee_x += 0.05f;
+		if (bee_x >= 5)
 			bee_flag = 2;
 		break;
 	case 2:
@@ -542,7 +550,7 @@ void animate(void)
 			bee_flag = 3;
 		break;
 	case 3:
-		bee_x -= 0.2f;
+		bee_x -= 0.05f;
 		if (bee_x <= 0)
 			bee_flag = 4;
 		break;
@@ -1730,9 +1738,20 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 
 	// hojas animacion remolino
 	model = glm::mat4(1.0f);
-
-	model = glm::translate(model, glm::vec3(0.0f + cc_x * 0.01, 1.0f + cc_y * 0.01, 10.0f + cc_z * 0.01));
+	model = glm::translate(model, glm::vec3(0.0f, 1.0f, 10.0f));
 	model = glm::scale(model, glm::vec3(2.0f, 1.0f, 0.18f));
+	//hojas 1
+	model = glm::translate(model, glm::vec3(cc_x * 0.01, cc_y * 0.01, cc_z * 0.01));
+	lightingShader.setMat4("model", model);
+	lightingShader.setInt("material_diffuse", t_hoja);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	//hojas 2
+	model = glm::translate(model, glm::vec3(0.3f + cc_x * 0.01, cc_y * 0.01, -0.3f + cc_z * 0.01));
+	lightingShader.setMat4("model", model);
+	lightingShader.setInt("material_diffuse", t_hoja);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	//hojas 3
+	model = glm::translate(model, glm::vec3(-0.6f + cc_x * 0.01, 0.1f + cc_y * 0.01, 0.2f + cc_z * 0.01));
 	lightingShader.setMat4("model", model);
 	lightingShader.setInt("material_diffuse", t_hoja);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -1741,10 +1760,22 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	//clouds 
 
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f + bee_x , 10.0f + bee_y, 10.0f + bee_z ));
-	model = glm::scale(model, glm::vec3(4.0f, 1.0f, 0.18f));
+	model = glm::translate(model, glm::vec3(-10.0f , 15.0f , 10.0f  ));
+	model = glm::scale(model, glm::vec3(4.0f, 1.0f, 1.0f));
+	//cloud 1
+	model = glm::translate(model, glm::vec3(bee_x, bee_y, bee_z));
 	lightingShader.setMat4("model", model);
-	lightingShader.setInt("material_diffuse", t_hoja);
+	lightingShader.setInt("material_diffuse", t_cloud);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	//cloud2
+	model = glm::translate(model, glm::vec3( bee_x - 0.8f, bee_y - 0.8f,  bee_z - 0.8f));
+	lightingShader.setMat4("model", model);
+	lightingShader.setInt("material_diffuse", t_cloud);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	//cloud3
+	model = glm::translate(model, glm::vec3(-bee_x - 0.5f, -bee_y - 0.5f, -bee_z - 0.5f));
+	lightingShader.setMat4("model", model);
+	lightingShader.setInt("material_diffuse", t_cloud);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	//Light
