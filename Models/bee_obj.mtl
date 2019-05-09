@@ -2,4 +2,4 @@
 # ToolType: PolyMesh3D
 # www.zbrush.com
 newmtl defaultMat
-map_Kd bee obj.bmp
+map_Kd bee_obj.jpg
