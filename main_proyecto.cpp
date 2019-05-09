@@ -634,8 +634,8 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	//Shader projectionShader("shaders/shader_light.vs", "shaders/shader_light.fs");
 	//Shader projectionShader("shaders/shader_texture_color.vs", "shaders/shader_texture_color.fs");
 	//Shader lightingShader("shaders/shader_texture_light_pos.vs", "shaders/shader_texture_light_pos.fs"); //Positional
-	Shader lightingShader("shaders/shader_texture_light_dir.vs", "shaders/shader_texture_light_dir.fs"); //Directional
-	//Shader lightingShader("shaders/shader_texture_light_spot.vs", "shaders/shader_texture_light_spot.fs"); //Spotlight
+	//Shader lightingShader("shaders/shader_texture_light_dir.vs", "shaders/shader_texture_light_dir.fs"); //Directional
+	Shader lightingShader("shaders/shader_texture_light_spot.vs", "shaders/shader_texture_light_spot.fs"); //Spotlight
 	Shader lampShader("shaders/shader_lamp.vs", "shaders/shader_lamp.fs");
 
 	//To Use Lighting
@@ -656,11 +656,12 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	lightingShader.setVec3("viewPos", camera.Position);
 
 	// light properties
-	lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+	lightingShader.setVec3("light.ambient", 0.5f, 0.5f, 0.5f);
 	lightingShader.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
 	lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
 	//For Positional and Spotlight
-	lightingShader.setFloat("light.constant", 1.0f);
+	lightingShader.setFloat("light.constant", 0.5f);
 	lightingShader.setFloat("light.linear", 0.09f);
 	lightingShader.setFloat("light.quadratic", 0.032f);
 
@@ -2128,9 +2129,17 @@ void my_input(GLFWwindow * window, int key, int scancode, int action, int mode)
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, (float)deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
-		reset_camera();
-	//if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-	//	reset_camera(0.0f, 25.0f, 80.0f);
+	{
+		camera.Position.x = 0.0f;
+		camera.Position.y = 5.0f;
+		camera.Position.z = 50.0f;
+	}
+	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+	{
+		camera.Position.x = 14.0f;
+		camera.Position.y = 4.5f;
+		camera.Position.z = -2.5f;
+	}
 
 
 	//To Configure Model
