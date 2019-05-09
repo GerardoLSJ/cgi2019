@@ -20,6 +20,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
+#include <sstream>
+#include <utility>
 
 using namespace std;
 
@@ -30,7 +33,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 
 
-//Variables para archivo de texto de keyframes
+//Variables para archivo de texto de fs
 ofstream myfile;
 
 // settings
@@ -151,6 +154,7 @@ int playIndex = 0;
 
 int writeFile()
 {
+	myfile.open("example.txt");
 
 	for (int i = 0; i <= FrameIndex; i++) {
 		myfile << KeyFrame[i].posX << "," << KeyFrame[i].posY << "," << KeyFrame[i].posZ << "\n";
@@ -161,6 +165,18 @@ int writeFile()
 }
 
 
+std::vector<std::string> explode(std::string const& s, char delim)
+{
+	std::vector<std::string> result;
+	std::istringstream iss(s);
+
+	for (std::string token; std::getline(iss, token, delim); )
+	{
+		result.push_back(std::move(token));
+	}
+
+	return result;
+}
 
 
 void reset_camera(void) {
@@ -203,13 +219,6 @@ void resetElements(void)
 void interpolation(void)
 {
 
-	string line;
-	ifstream myfile ("example.txt");
-
-	while ( getline(myfile, line)) {
-		cout << line << " ___ ";
-	}
-	
 	KeyFrame[playIndex].incX = (KeyFrame[playIndex + 1].posX - KeyFrame[playIndex].posX) / i_max_steps;
 	KeyFrame[playIndex].incY = (KeyFrame[playIndex + 1].posY - KeyFrame[playIndex].posY) / i_max_steps;
 	KeyFrame[playIndex].incZ = (KeyFrame[playIndex + 1].posZ - KeyFrame[playIndex].posZ) / i_max_steps;
@@ -562,6 +571,11 @@ void animate(void)
 
 	if (play)
 	{
+
+
+
+		
+
 		if (i_curr_steps >= i_max_steps) //end of animation between frames?
 		{
 			playIndex++;
@@ -575,6 +589,8 @@ void animate(void)
 			{
 				i_curr_steps = 0; //Reset counter
 								  //Interpolation
+
+				cout << "second interpolation";
 				interpolation();
 			}
 		}
@@ -598,7 +614,7 @@ void animate(void)
 }
 
 void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Model torso,
-	Model brazoDer, Model brazoIzq, Model cabeza, Model piso, Model pc, Model grass)
+	Model brazoDer, Model brazoIzq, Model cabeza, Model piso, Model pc, Model grass, Model paper)
 {
 	//Shader projectionShader("shaders/shader_light.vs", "shaders/shader_light.fs");
 	//Shader projectionShader("shaders/shader_texture_color.vs", "shaders/shader_texture_color.fs");
@@ -1859,10 +1875,13 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	//aNIMACION CON KEYFRAMES
 	model = glm::mat4(1.0f);
 
-	model = glm::translate(model, glm::vec3(posX, posY, posZ));
-	model = glm::scale(model, glm::vec3(posX, 1.88f, 1.88f));
+	model = glm::translate(model, glm::vec3(0.0f, 7.0f, 0.0f));
+	
+	 model = glm::translate(model, glm::vec3(posX, 7.0f + posY, posZ));
+	//model = glm::translate(model, glm::vec3(0.0f, 0.0f, 10.0f));
+	model = glm::scale(model, glm::vec3(0.01f, 0.01f,0.01f));
 	shader.setMat4("model", model);
-	grass.Draw(shader);	// grass
+	paper.Draw(shader);	// grass
 
 
 
@@ -1871,7 +1890,12 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 int main()
 {
 
-	myfile.open("example.txt");
+
+
+
+
+
+
 
 
 	// glfw: initialize and configure
@@ -1928,6 +1952,7 @@ int main()
 	Model pisoModel = ((char*)"Models/piso/piso.obj");
 	Model pcModel = ((char*)"Models/g.obj");
 	Model grassModel = ((char*)"Models/grass2.obj");
+	Model paperModel = ((char*)"Models/g.obj");
 	
 	//Inicialización de KeyFrames
 
@@ -1940,6 +1965,29 @@ int main()
 		KeyFrame[i].rotRodIzq = 0;
 		KeyFrame[i].rotInc = 0;
 	}
+
+	
+	
+	string line;
+	ifstream myfile("example.txt");
+	int a = 0;
+
+	while (getline(myfile, line)) {
+		auto v = explode(line, ',');
+
+		KeyFrame[a].posX = std::stof(v[0]);
+		KeyFrame[a].posY = std::stof(v[1]);
+		KeyFrame[a].posZ = std::stof(v[2]);
+
+		cout << v[0] << " " << v[1] << " " << v[2] << "  a " << a <<"\n";
+		a++;
+		FrameIndex++;
+	}
+	
+
+
+
+
 
 
 	glm::mat4 projection = glm::mat4(1.0f);	//This matrix is for Projection
@@ -1966,7 +2014,7 @@ int main()
 		//display(modelShader, ourModel, llantasModel);
 		display(modelShader, botaDer, piernaDer,
 			piernaIzq, torso, brazoDer, brazoIzq,
-			cabeza, pisoModel, pcModel,grassModel);
+			cabeza, pisoModel, pcModel,grassModel, paperModel);
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
@@ -2018,6 +2066,8 @@ void my_input(GLFWwindow * window, int key, int scancode, int action, int mode)
 	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
 		posY++;
 
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+		writeFile();
 
 
 	//To play KeyFrame animation 
@@ -2025,6 +2075,7 @@ void my_input(GLFWwindow * window, int key, int scancode, int action, int mode)
 	{
 		if (play == false && (FrameIndex > 1))
 		{
+			cout << "first Interpolation\n";
 			resetElements();
 			//First Interpolation				
 			interpolation();
@@ -2034,10 +2085,10 @@ void my_input(GLFWwindow * window, int key, int scancode, int action, int mode)
 			i_curr_steps = 0;
 
 			//Guardar la animacion en el archivo
-			writeFile();
 		}
 		else
 		{
+			cout << "wont play animation";
 			play = false;
 		}
 	}
